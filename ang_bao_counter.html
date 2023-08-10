@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <title>Ang Bao Counter</title>
+    <style>
+      html {
+        font-family: "Open Sans";
+      }
+
+      body {
+        min-height: 100vh;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        row-gap: 1rem;
+      }
+
+      kbd {
+        border: 2px solid black;
+        box-shadow: 2px 2px black;
+        font-size: 0.85em;
+        line-height: 0.85em;
+        display: inline-block;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        padding: 3px 5px;
+        white-space: nowrap;
+      }
+
+      #total-sum {
+        font-size: 5rem;
+      }
+
+      #breakdown {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        column-gap: 1rem;
+      }
+
+      #breakdown div {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="total-sum"></h1>
+    <div id="breakdown"></div>
+    <div>Hold <kbd>Shift</kbd> to delete.</div>
+    <script>
+      const noteCount = {
+        two: 0,
+        five: 0,
+        ten: 0,
+        fifty: 0,
+        hundred: 0,
+      };
+      const noteTypeToSymbol = {
+        two: "2",
+        five: "5",
+        ten: "10",
+        fifty: "50",
+        hundred: "100",
+      };
+      let total = 0;
+      const setDisplay = () => {
+        total =
+          noteCount.two * 2 +
+          noteCount.five * 5 +
+          noteCount.ten * 10 +
+          noteCount.fifty * 50 +
+          noteCount.hundred * 100;
+        document.getElementById("total-sum").innerHTML = `\$${total}`;
+        let idx = 1;
+        for (let noteType in noteCount) {
+          document.getElementById(
+            noteType
+          ).innerHTML = `<kbd style="font-size: 0.85rem">${idx}</kbd><br/>
+          <b>\$${noteTypeToSymbol[noteType]}</b> &times; ${noteCount[noteType]}`;
+          idx++;
+        }
+      };
+      const init = () => {
+        for (let noteType in noteCount) {
+          const countEle = document.createElement("div");
+          countEle.id = noteType;
+          document.getElementById("breakdown").appendChild(countEle);
+        }
+        setDisplay();
+      };
+      document.addEventListener("keydown", (e) => {
+        const incre = e.shiftKey ? -1 : 1;
+        switch (e.keyCode) {
+          case 49:
+            noteCount.two = Math.max(noteCount.two + incre, 0);
+            break;
+          case 50:
+            noteCount.five = Math.max(noteCount.five + incre, 0);
+            break;
+          case 51:
+            noteCount.ten = Math.max(noteCount.ten + incre, 0);
+            break;
+          case 52:
+            noteCount.fifty = Math.max(noteCount.fifty + incre, 0);
+            break;
+          case 53:
+            noteCount.hundred = Math.max(noteCount.hundred + incre, 0);
+            break;
+          default:
+            return;
+        }
+        setDisplay();
+      });
+      init();
+    </script>
+  </body>
+</html>
